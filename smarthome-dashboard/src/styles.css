@@ -1,0 +1,7 @@
+body{margin:0;font-family:Arial;background:#0b0d12;color:white}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:240px;background:#12151c;padding:24px}
+.content{flex:1;padding:24px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:#1a1f29;border-radius:16px;padding:18px;min-height:120px}
+h1,h2,h3,p{margin:0 0 12px}
