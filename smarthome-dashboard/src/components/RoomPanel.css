@@ -1,0 +1,120 @@
+.room-panel {
+  width: 220px;
+  background: #13151f;
+  padding: 24px 16px;
+  border-left: 1px solid #1f2235;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+.room-panel-touch {
+  border: 1.5px solid #6366f1;
+  border-radius: 14px;
+  padding: 14px;
+}
+.room-panel-touch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.room-panel-touch-title {
+  color: #818cf8;
+  font-weight: 700;
+  font-size: 15px;
+}
+.room-panel-touch-action {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+}
+.room-panel-touch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.room-panel-touch-tile {
+  height: 50px;
+  background: #1e2130;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.room-panel-touch-add {
+  color: #6b7280;
+  font-size: 22px;
+  cursor: pointer;
+}
+.room-panel-touch-note {
+  font-size: 11px;
+  color: #6b7280;
+  text-align: center;
+  margin-top: 8px;
+}
+.room-panel-rooms-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.room-panel-rooms-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+.room-panel-rooms-search {
+  background: #1e2130;
+  border-radius: 8px;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6b7280;
+}
+.room-panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.room-panel-room {
+  background: #1e2130;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid transparent;
+}
+.room-panel-room.active {
+  background: #1e2a45;
+  border-color: #3b82f6;
+}
+.room-panel-room-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #374151;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.room-panel-room.active .room-panel-room-dot {
+  background: #3b82f6;
+}
+.room-panel-room-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+.room-panel-room-count {
+  font-size: 11px;
+  color: #6b7280;
+}

@@ -1,14 +1,56 @@
 import axios from 'axios';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://homecontrol.shinecrafttechnologies.com';
+
 const api = axios.create({
-  baseURL: 'http://localhost:3000'
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token');
-  if (token) config.headers.Authorization = token;
+  if (token) {
+    // Try without Bearer prefix first, as the API docs suggest just the token
+    config.headers.Authorization = token;
+    console.log('API Request:', config.method?.toUpperCase(), config.url, 'with token:', token.substring(0, 20) + '...');
+  } else {
+    console.log('API Request:', config.method?.toUpperCase(), config.url, 'NO TOKEN');
+  }
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    console.error('API Error:', error.response?.status, error.response?.data, error.config?.url);
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (refreshToken) {
+        try {
+          console.log('Attempting token refresh...');
+          const response = await axios.post(`${API_BASE_URL}/refresh`, { token: refreshToken }, {
+            headers: { 'Content-Type': 'application/json' }
+          });
+          const { access_token, refresh_token } = response.data;
+          localStorage.setItem('access_token', access_token);
+          localStorage.setItem('refresh_token', refresh_token);
+          originalRequest.headers.Authorization = access_token;
+          console.log('Token refreshed, retrying request...');
+          return api(originalRequest);
+        } catch (refreshError) {
+          console.error('Token refresh failed:', refreshError.response?.data);
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+        }
+      }
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Authentication
 export const signUp = (data) => api.post('/signUp', data);
@@ -21,7 +63,16 @@ export const changePassword = (data) => api.put('/changePassword', data);
 export const getHomes = () => api.get('/home');
 export const createHome = (data) => api.post('/home', data);
 export const updateHome = (homeId, data) => api.patch(`/home/${homeId}`, data);
-export const deleteHome = (homeId) => api.delete(`/homes/${homeId}`);
+export const deleteHome = async (homeId) => {
+  try {
+    return await api.delete(`/home/${homeId}`);
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return api.delete(`/homes/${homeId}`);
+    }
+    throw error;
+  }
+};
 export const getHomeBoards = (data) => api.post('/home/boards', data);
 
 // Room Management

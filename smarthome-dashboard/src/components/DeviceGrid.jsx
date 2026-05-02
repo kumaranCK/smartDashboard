@@ -2,45 +2,53 @@ import React from 'react';
 import { deviceTabs } from '../constants.js';
 import { LampIcon } from './icons.jsx';
 import Toggle from './Toggle.jsx';
+import './DeviceGrid.css';
 
 const DeviceGrid = ({ activeTab, setActiveTab, deviceStates, toggleDevice }) => {
+  // Filter devices based on active tab
+  const filteredDevices = deviceStates.filter(device => {
+    // Extract the base tab name (remove the index suffix)
+    const baseTab = activeTab.replace(/\d+$/, '');
+    // For now, show all devices if tab is "Lights" (default), otherwise filter by category if available
+    if (baseTab === 'Lights') return true;
+    if (baseTab === 'Fans') return device.category === 'FAN' || device.type === 'Fan';
+    return true; // Show all for other tabs for now
+  });
+
   return (
     <>
       {/* Devices section */}
-      <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 14 }}>Devices</h3>
+      <h3 className="device-grid-heading">Devices</h3>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
-        {deviceTabs.map((tab, i) => (
-          <button key={i} onClick={() => setActiveTab(tab + i)} style={{
-            padding: "7px 16px", borderRadius: 20, border: "none", cursor: "pointer",
-            background: (activeTab === tab + i || (i === 0 && activeTab === "Lights")) ? "#6366f1" : "#1e2130",
-            color: (activeTab === tab + i || (i === 0 && activeTab === "Lights")) ? "white" : "#9ca3af",
-            fontSize: 13, fontWeight: 500, transition: "all 0.2s",
-            display: "flex", alignItems: "center", gap: 5,
-          }}>
-            <span style={{ fontSize: 12 }}>💡</span> {tab}
-          </button>
-        ))}
+      <div className="device-tabs">
+        {deviceTabs.map((tab, i) => {
+          const tabId = tab + i;
+          const isActive = activeTab === tabId || (i === 0 && activeTab === 'Lights');
+          return (
+            <button
+              key={i}
+              onClick={() => setActiveTab(tabId)}
+              className={`device-tab${isActive ? ' active' : ''}`}
+            >
+              <span className="device-tab-icon">💡</span> {tab}
+            </button>
+          );
+        })}
       </div>
 
       {/* Device cards grid */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        {deviceStates.map(device => (
-          <div key={device.id} style={{
-            background: "#1e2130", borderRadius: 14, padding: "16px",
-            display: "flex", flexDirection: "column", gap: 10,
-            border: device.on ? "1px solid rgba(99,102,241,0.3)" : "1px solid transparent",
-            transition: "border 0.2s",
-          }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+      <div className="device-cards">
+        {filteredDevices.map(device => (
+          <div key={device.id} className={`device-card${device.on ? ' on' : ''}`} onClick={() => toggleDevice(device.id)}>
+            <div className="device-card-header">
               <div>
-                <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 3 }}>lightheads</div>
-                <div style={{ fontSize: 14, fontWeight: 600, color: "#e5e7eb" }}>{device.name}</div>
+                <div className="device-card-subtitle">lightheads</div>
+                <div className="device-card-title">{device.name}</div>
               </div>
-              <LampIcon color={device.on ? device.color : "#374151"} size={38} />
+              <LampIcon color={device.on ? device.color : '#374151'} size={38} />
             </div>
-            <Toggle on={device.on} onChange={() => toggleDevice(device.id)} />
+            <Toggle on={device.on} onChange={toggleDevice} deviceId={device.id} />
           </div>
         ))}
       </div>
