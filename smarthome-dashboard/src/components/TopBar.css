@@ -1,0 +1,57 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  border-bottom: 1px solid #1f2235;
+  background: #13151f;
+}
+.topbar-title {
+  font-size: 22px;
+  font-weight: 700;
+}
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.topbar-home {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e2130;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #d1d5db;
+}
+.topbar-home span {
+  margin-left: 4px;
+}
+.topbar-icon-btn,
+.topbar-user-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.topbar-icon-btn {
+  background: #1e2130;
+  color: #9ca3af;
+}
+.topbar-user-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+}

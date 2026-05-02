@@ -1,0 +1,64 @@
+.device-grid-heading {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.device-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.device-tab-icon {
+  font-size: 12px;
+}
+.device-tab {
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  background: #1e2130;
+  color: #9ca3af;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.device-tab.active {
+  background: #6366f1;
+  color: white;
+}
+.device-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.device-card {
+  background: #1e2130;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid transparent;
+  transition: border 0.2s;
+}
+.device-card.on {
+  border-color: rgba(99, 102, 241, 0.3);
+}
+.device-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.device-card-subtitle {
+  font-size: 10px;
+  color: #6b7280;
+  margin-bottom: 3px;
+}
+.device-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e5e7eb;
+}

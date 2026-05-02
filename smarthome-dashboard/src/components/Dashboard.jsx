@@ -4,6 +4,7 @@ import Sidebar from "./Sidebar.jsx";
 import TopBar from "./TopBar.jsx";
 import MainContent from "./MainContent.jsx";
 import RoomPanel from "./RoomPanel.jsx";
+import "./Dashboard.css";
 
 export default function SmartHomeDashboard({ onLogout }) {
   const [activeNav, setActiveNav] = useState("Devices");
@@ -15,6 +16,21 @@ export default function SmartHomeDashboard({ onLogout }) {
   const [devices, setDevices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentHome, setCurrentHome] = useState(null);
+
+  const fetchDevicesForRoom = async (roomIndex) => {
+    if (!currentHome || !rooms.length || roomIndex < 0 || roomIndex >= rooms.length) {
+      return;
+    }
+
+    const room = rooms[roomIndex];
+    try {
+      const devicesResponse = await getDevicesByRoom(room._id, { home: currentHome._id });
+      setDevices(devicesResponse.data.devices);
+      setDeviceStates(devicesResponse.data.devices.map(d => ({ ...d, on: d.state, id: d._id, color: "#22c55e" })));
+    } catch (error) {
+      console.error('Error fetching devices for room:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +76,12 @@ export default function SmartHomeDashboard({ onLogout }) {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!loading && rooms.length > 0) {
+      fetchDevicesForRoom(selectedRoom);
+    }
+  }, [selectedRoom, rooms, currentHome, loading]);
+
   const toggleDeviceState = async (id) => {
     const device = deviceStates.find(d => d.id === id || d._id === id);
     if (!device) return;
@@ -76,25 +98,18 @@ export default function SmartHomeDashboard({ onLogout }) {
   };
 
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: "#0f1117", color: "#e5e7eb" }}>Loading...</div>;
+    return <div className="page-loading">Loading...</div>;
   }
 
   return (
-    <div style={{
-      display: "flex",
-      height: "100vh",
-      background: "#0f1117",
-      fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
-      color: "#e5e7eb",
-      overflow: "hidden",
-    }}>
+    <div className="dashboard-shell">
       <Sidebar activeNav={activeNav} setActiveNav={setActiveNav} onLogout={onLogout} />
 
       {/* Main content */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+      <div className="dashboard-main">
         <TopBar />
 
-        <div style={{ flex: 1, display: "flex", overflow: "hidden" }}>
+        <div className="dashboard-content">
           <MainContent activeTab={activeTab} setActiveTab={setActiveTab} deviceStates={deviceStates} toggleDevice={toggleDeviceState} rooms={rooms} currentHome={currentHome} selectedRoom={selectedRoom} />
           <RoomPanel selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom} rooms={rooms} />
         </div>

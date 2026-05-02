@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { login } from '../services/api.js';
+import './Login.css';
 
-const Login = ({ onLogin }) => {
+const Login = ({ onLogin, onShowSignup }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -26,89 +27,47 @@ const Login = ({ onLogin }) => {
   };
 
   return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      background: '#0f1117',
-      fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
-      color: '#e5e7eb'
-    }}>
-      <div style={{
-        background: '#1e2130',
-        padding: '40px',
-        borderRadius: '16px',
-        width: '400px',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
-      }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '30px', fontSize: '24px', fontWeight: '700' }}>
-          Smart Home Login
-        </h2>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2 className="auth-title">Smart Home Login</h2>
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#9ca3af' }}>
-              Email
-            </label>
+          <div className="auth-field">
+            <label className="auth-label">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '8px',
-                border: '1px solid #374151',
-                background: '#13151f',
-                color: '#e5e7eb',
-                fontSize: '16px'
-              }}
+              className="auth-input"
               required
             />
           </div>
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: '#9ca3af' }}>
-              Password
-            </label>
+          <div className="auth-field">
+            <label className="auth-label">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '8px',
-                border: '1px solid #374151',
-                background: '#13151f',
-                color: '#e5e7eb',
-                fontSize: '16px'
-              }}
+              className="auth-input"
               required
             />
           </div>
           {error && (
-            <div style={{ color: '#ef4444', marginBottom: '20px', fontSize: '14px' }}>
-              {error}
-            </div>
+            <div className="auth-message error">{error}</div>
           )}
           <button
             type="submit"
             disabled={loading}
-            style={{
-              width: '100%',
-              padding: '12px',
-              borderRadius: '8px',
-              border: 'none',
-              background: loading ? '#374151' : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-              color: 'white',
-              fontSize: '16px',
-              fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer'
-            }}
+            className={`auth-button${loading ? ' disabled' : ''}`}
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+        <div className="auth-footer">
+          Don't have an account?{' '}
+          <button type='button' onClick={onShowSignup} className="auth-link">
+            Sign up
+          </button>
+        </div>
       </div>
     </div>
   );

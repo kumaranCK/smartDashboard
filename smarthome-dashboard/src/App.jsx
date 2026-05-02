@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
+import "./App.css";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [authMode, setAuthMode] = useState('login');
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -24,9 +27,18 @@ export default function App() {
     setIsAuthenticated(false);
   };
 
+  const showLogin = () => setAuthMode('login');
+  const showSignup = () => setAuthMode('signup');
+
   if (loading) {
-    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#0f1117', color: '#e5e7eb' }}>Loading...</div>;
+    return <div className="page-loading">Loading...</div>;
   }
 
-  return isAuthenticated ? <Dashboard onLogout={handleLogout} /> : <Login onLogin={handleLogin} />;
+  if (isAuthenticated) {
+    return <Dashboard onLogout={handleLogout} />;
+  }
+
+  return authMode === 'signup'
+    ? <Signup onSignupComplete={showLogin} onShowLogin={showLogin} />
+    : <Login onLogin={handleLogin} onShowSignup={showSignup} />;
 }
